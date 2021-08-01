@@ -57,7 +57,9 @@ def read_user_mods():
     with open('modules_taken.txt') as file:
         mods = file.readlines()
         file.close()
-    return [mod.rstrip() for mod in mods]
+    user_mods = [mod.rstrip() for mod in mods]
+    user_mods.append(True) # for evaluation with pre-req trees
+    return user_mods
 
 """
 Evaluation / search functions to check eligibility
@@ -81,12 +83,11 @@ def evaluate_prereq_tree(user_mods, prereq_tree):
 
         for term in prereq_list:
             if isinstance(term, dict):
-                evaluate_prereq_tree(user_mods, term)
-            else:
-                if term in user_mods and operator == 'or':
-                    fulfill_status = True
-                elif term not in user_mods and operator == 'and':
-                    fulfill_status = False
+                term = evaluate_prereq_tree(user_mods, term)
+            if term in user_mods and operator == 'or':
+                fulfill_status = True
+            elif term not in user_mods and operator == 'and':
+                fulfill_status = False
 
         return fulfill_status
 
