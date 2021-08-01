@@ -53,10 +53,6 @@ def get_specific_mod_info(mod_code):
     except json.decoder.JSONDecodeError:
         return {}
 
-def get_specific_mod_prereqs(mods_info):
-    for mod in mods_info:
-        print(mod['prerequisite'])
-
 def read_user_mods():
     with open('modules_taken.txt') as file:
         mods = file.readlines()
